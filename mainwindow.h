@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit MainWindow(QWidget* parent = 0);
+	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
 
 private slots:
@@ -27,7 +27,7 @@ private:
 	Ui::MainWindow *ui;
 
 	void createTray();
-	void closeEvent(QCloseEvent* event);
+	void closeEvent(QCloseEvent *event);
 };
 
 #endif // MAINWINDOW_H

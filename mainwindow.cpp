@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "activitychecker.h"
+#include "process.h"
 
 #include <QTimer>
+#include <sstream>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -10,9 +11,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	QIcon icon(":icon.png");
+	this->setWindowIcon(icon);
+
 	QPushButton* button = ui->pushButton;
-	QTimer* pollTimer = new QTimer(this);
-	QTimer* saveTimer = new QTimer(this);
+	QTimer *pollTimer = new QTimer(this);
+	QTimer *saveTimer = new QTimer(this);
 
 	connect(button, SIGNAL(released()), this, SLOT(handleButton()));
 	connect(pollTimer, SIGNAL(timeout()), this, SLOT(update()));
@@ -23,20 +27,23 @@ MainWindow::MainWindow(QWidget *parent) :
 	saveTimer->start(10000);
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
 	delete ui;
 }
 
-void MainWindow::handleButton()
-{
-	std::string windowName = ActivityChecker::getActivity();
-	ui->label->setText(QString::fromStdString(windowName));
+void MainWindow::handleButton() {
+
 }
 
 void MainWindow::update() {
-	std::string windowName = ActivityChecker::getActivity();
-	ui->label->setText(QString::fromStdString(windowName));
+	Process process = Process::getActiveProcess();
+
+	std::stringstream text;
+
+	text << "Name: " << process.getProcessName() << std::endl;
+	text << "Title: " << process.getProcessTitle() << std::endl;
+
+	ui->textBrowser->setText(QString::fromStdString(text.str()));
 }
 
 void MainWindow::createTray() {
@@ -44,13 +51,13 @@ void MainWindow::createTray() {
 
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray()));
 
-	QAction* showAction = new QAction("Show", trayIcon);
+	QAction *showAction = new QAction("Show", trayIcon);
 	connect(showAction, SIGNAL(triggered()), this, SLOT(show()));
 
-	QAction* quitAction = new QAction("Exit", trayIcon);
+	QAction *quitAction = new QAction("Exit", trayIcon);
 	connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
-	QMenu* trayMenu = new QMenu;
+	QMenu *trayMenu = new QMenu;
 	trayMenu->addAction(showAction);
 	trayMenu->addAction(quitAction);
 
@@ -69,7 +76,7 @@ void MainWindow::quit() {
 	this->close();
 }
 
-void MainWindow::closeEvent(QCloseEvent* event) {
+void MainWindow::closeEvent(QCloseEvent *event) {
 	if(!this->isHidden()) {
 		this->hide();
 		event->ignore();
