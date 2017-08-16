@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
+#include <QCloseEvent>
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,7 @@ private slots:
 	void handleButton();
 	void update();
 	void toggleTray(QSystemTrayIcon::ActivationReason);
+	void quit();
 
 private:
 	Ui::MainWindow *ui;

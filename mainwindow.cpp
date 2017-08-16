@@ -44,10 +44,14 @@ void MainWindow::createTray() {
 
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray()));
 
+	QAction* showAction = new QAction("Show", trayIcon);
+	connect(showAction, SIGNAL(triggered()), this, SLOT(show()));
+
 	QAction* quitAction = new QAction("Exit", trayIcon);
-	connect(quitAction, SIGNAL(triggered()), this, SLOT(exit()));
+	connect(quitAction, SIGNAL(triggered()), this, SLOT(quit()));
 
 	QMenu* trayMenu = new QMenu;
+	trayMenu->addAction(showAction);
 	trayMenu->addAction(quitAction);
 
 	trayIcon->setContextMenu(trayMenu);
@@ -55,10 +59,19 @@ void MainWindow::createTray() {
 }
 
 void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason) {
-	hide();
+	if(reason = QSystemTrayIcon::DoubleClick) {
+		this->show();
+	}
+}
+
+void MainWindow::quit() {
+	this->hide();
+	this->close();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
-	this->hide();
-	//event->activate();
+	if(!this->isHidden()) {
+		this->hide();
+		event->ignore();
+	}
 }

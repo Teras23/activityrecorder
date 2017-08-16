@@ -13,23 +13,23 @@ std::string ActivityChecker::getActivity()
 
 	if(window != NULL)
 	{
-		std::cout << window << std::endl;
+		//std::cout << window << std::endl;
 		int textLength = GetWindowTextLength(window);
 		LPSTR text = new char[textLength];
 		int response = GetWindowTextA(window, text, textLength + 1);
 
 		DWORD pid = GetWindowThreadProcessId(window, NULL);
-		std::cout << pid << std::endl;
+		//std::cout << pid << std::endl;
 
 		LPSTR name = new char[256];
 
 		UINT ret = GetWindowModuleFileNameA(window, name, 255);
 
-		std::cout << name << std::endl;
+		//std::cout << name << std::endl;
 
 		if(response == 0) {
 			DWORD error = GetLastError();
-			std::cout << "no text " << std::hex << error << std::endl;
+			//std::cout << "no text " << std::hex << error << std::endl;
 		}
 
 		title = text;
