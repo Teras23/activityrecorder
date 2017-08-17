@@ -24,15 +24,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 msvc: LIBS += -luser32 -lkernel32 -lpsapi
 
-SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-        process.cpp
+SOURCES +=  src/main.cpp \
+            src/mainwindow.cpp \
+            src/process.cpp
 
 
 HEADERS += \
-        mainwindow.h \
-        process.h
+        src/mainwindow.h \
+        src/process.h
 
 
 FORMS += \

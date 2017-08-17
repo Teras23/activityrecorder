@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	QIcon icon(":icon.png");
+	QIcon icon(":/res/icon.png");
 	this->setWindowIcon(icon);
 
 	QPushButton* button = ui->pushButton;
@@ -47,7 +47,7 @@ void MainWindow::update() {
 }
 
 void MainWindow::createTray() {
-	QSystemTrayIcon* trayIcon = new QSystemTrayIcon(QIcon(":/icon.png"), this);
+	QSystemTrayIcon* trayIcon = new QSystemTrayIcon(QIcon(":/res/icon.png"), this);
 
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray()));
 
