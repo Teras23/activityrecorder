@@ -3,28 +3,34 @@
 #include <regex>
 #include <algorithm>
 
-Process::Process(std::string title, std::string path) :
+std::vector<Process> Process::_processHistory = std::vector<Process>();
+
+Process::Process(std::wstring title, std::wstring path) :
 	m_processTitle(title), m_processPath(path)
 {
-	std::regex nameRegex("\\\\(.+\\\\)*(.+)\\.");
-	std::smatch match;
+	std::wregex nameRegex(L"\\\\(.+\\\\)*(.+)\\.");
+	std::wsmatch match;
 	std::regex_search(path, match, nameRegex);
 
 	if(match.size() > 0) {
-		std::string name = match[match.size() - 1];
+		std::wstring name = match[match.size() - 1];
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 		m_processName = name;
 	}
 	else {
-		m_processName = "null";
+		m_processName = L"null";
 	}
 }
 
-std::string Process::getProcessTitle() {
+std::wstring Process::getProcessTitle() {
 	return m_processTitle;
 }
 
-std::string Process::getProcessName() {
+std::wstring Process::getProcessPath() {
+	return m_processPath;
+}
+
+std::wstring Process::getProcessName() {
 	return m_processName;
 }
 
@@ -40,52 +46,46 @@ BOOL CALLBACK EnumChildWindowsCallback(HWND window, LPARAM lp) {
 
 Process Process::getActiveProcess() {
 	HWND window = GetForegroundWindow();
-	std::string title = "";
-	std::string path = "";
+	std::wstring title = L"";
+	std::wstring path = L"";
 
 	if(window != NULL) {
-		int textLength = GetWindowTextLength(window);
-		LPSTR tempTitle = new char[textLength];
-		int response = GetWindowTextA(window, tempTitle, textLength + 1);
+		const int MAX_TITLE_SIZE = 256;
+		wchar_t processTitle[MAX_TITLE_SIZE];
+		int response = GetWindowText(window, processTitle, MAX_TITLE_SIZE + 1);
 
 		if(response == 0) {
-			title = "null";
+			title = L"null";
 		}
 		else {
-			title = tempTitle;
+			title = std::wstring(processTitle);
 		}
 
 		DWORD pids[2] = {0, 0}; //Owner and child pid
 		GetWindowThreadProcessId(window, pids);
 		pids[1] = pids[0];
 
-
-
 		EnumChildWindows(window, EnumChildWindowsCallback, (LPARAM)pids);
 		HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pids[1]);
 
-		LPSTR processPath = new char[MAX_PATH];
+		wchar_t processPath[MAX_PATH];
 
 		if(process != NULL) {
 			HMODULE hMod;
 			DWORD cb;
 			if(EnumProcessModules(process, &hMod, sizeof(hMod), &cb)) {
-				GetModuleFileNameExA(process, hMod, processPath, MAX_PATH);
+				DWORD len = GetModuleFileNameEx(process, hMod, processPath, MAX_PATH);
+				path = std::wstring(processPath);
 			}
 			else {
 				DWORD error = GetLastError();
 				std::cerr << error << std::endl;
+				path = L"null";
 			}
 		}
 
 		CloseHandle(process);
-
-		path = processPath;
-	}
-	else {
-		DWORD error = GetLastError();
-		std::cerr << "no win " << error << std::endl;
 	}
 
-	return Process(title, path);
+	return 	Process(title, path);
 }

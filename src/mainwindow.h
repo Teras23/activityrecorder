@@ -18,10 +18,10 @@ public:
 	~MainWindow();
 
 private slots:
-	void handleButton();
 	void update();
 	void toggleTray(QSystemTrayIcon::ActivationReason);
 	void quit();
+	void save();
 
 private:
 	Ui::MainWindow *ui;

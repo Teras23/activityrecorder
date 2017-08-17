@@ -3,7 +3,11 @@
 #include "process.h"
 
 #include <QTimer>
+#include <QFile>
+#include <QDir>
+#include <QStandardPaths>
 #include <sstream>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -18,12 +22,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	QTimer *pollTimer = new QTimer(this);
 	QTimer *saveTimer = new QTimer(this);
 
-	connect(button, SIGNAL(released()), this, SLOT(handleButton()));
+	connect(button, SIGNAL(released()), this, SLOT(save()));
 	connect(pollTimer, SIGNAL(timeout()), this, SLOT(update()));
+	connect(saveTimer, SIGNAL(timeout()), this, SLOT(save()));
 
 	createTray();
 
-	pollTimer->start(1000);
+	pollTimer->start(10);
 	saveTimer->start(10000);
 }
 
@@ -31,19 +36,42 @@ MainWindow::~MainWindow() {
 	delete ui;
 }
 
-void MainWindow::handleButton() {
-
-}
-
 void MainWindow::update() {
 	Process process = Process::getActiveProcess();
 
-	std::stringstream text;
+	Process::_processHistory.push_back(process);
+
+	std::wstringstream text;
 
 	text << "Name: " << process.getProcessName() << std::endl;
 	text << "Title: " << process.getProcessTitle() << std::endl;
+	text << "Path: " << process.getProcessPath() << std::endl;
 
-	ui->textBrowser->setText(QString::fromStdString(text.str()));
+	ui->textBrowser->setText(QString::fromStdWString(text.str()));
+}
+
+void MainWindow::save() {
+	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+	QFile data(dataLocation + "/data.dat");
+
+	std::clog << "Save " << Process::_processHistory.size() << std::endl;
+
+	if(!QDir(dataLocation).exists()) {
+		QDir().mkpath(dataLocation);
+		std::clog << "Created directory " << dataLocation.toStdString() << std::endl;
+	}
+
+	if(data.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		data.write("test");
+		data.close();
+	}
+	else {
+		QFileInfo info(data);
+		std::cerr << "Could not open file " << info.absoluteFilePath().toStdString() << std::endl;
+	}
+
+	Process::_processHistory.clear();
 }
 
 void MainWindow::createTray() {
