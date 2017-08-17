@@ -49,7 +49,7 @@ void MainWindow::update() {
 void MainWindow::createTray() {
 	QSystemTrayIcon* trayIcon = new QSystemTrayIcon(QIcon(":/res/icon.png"), this);
 
-	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray()));
+	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray(QSystemTrayIcon::ActivationReason)));
 
 	QAction *showAction = new QAction("Show", trayIcon);
 	connect(showAction, SIGNAL(triggered()), this, SLOT(show()));
@@ -66,7 +66,7 @@ void MainWindow::createTray() {
 }
 
 void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason) {
-	if(reason = QSystemTrayIcon::DoubleClick) {
+	if(reason == QSystemTrayIcon::DoubleClick) {
 		this->show();
 	}
 }

@@ -12,10 +12,12 @@ public:
 	static Process getActiveProcess();
 
 	std::string getProcessTitle();
+	std::string getProcessPath();
 	std::string getProcessName();
 
 private:
 	std::string m_processTitle;
+	std::string m_processPath;
 	std::string m_processName;
 };
 
