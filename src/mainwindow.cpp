@@ -1,11 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "process.h"
+#include "file.h"
 
 #include <QTimer>
-#include <QFile>
-#include <QDir>
-#include <QStandardPaths>
+
 #include <sstream>
 #include <iostream>
 
@@ -18,28 +17,33 @@ MainWindow::MainWindow(QWidget *parent) :
 	QIcon icon(":/res/icon.png");
 	this->setWindowIcon(icon);
 
-	QPushButton* button = ui->pushButton;
-	QTimer *pollTimer = new QTimer(this);
-	QTimer *saveTimer = new QTimer(this);
+	QAction *saveAction = ui->actionSave;
+	m_pollTimer = new QTimer(this);
+	m_saveTimer = new QTimer(this);
 
-	connect(button, SIGNAL(released()), this, SLOT(save()));
-	connect(pollTimer, SIGNAL(timeout()), this, SLOT(update()));
-	connect(saveTimer, SIGNAL(timeout()), this, SLOT(save()));
+	connect(saveAction, SIGNAL(released()), this, SLOT(save()));
+	connect(m_pollTimer, SIGNAL(timeout()), this, SLOT(update()));
+	connect(m_saveTimer, SIGNAL(timeout()), this, SLOT(save()));
 
 	createTray();
 
-	pollTimer->start(10);
-	saveTimer->start(10000);
+	m_pollTime = 1000;
+	m_saveTime = 10000;
+
+	m_pollTimer->start(m_pollTime);
+	m_saveTimer->start(10000);
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
 	delete ui;
 }
 
-void MainWindow::update() {
+void MainWindow::update()
+{
 	Process process = Process::getActiveProcess();
 
-	Process::_processHistory.push_back(process);
+	Process::_processHistory.push_back(std::make_pair(process, m_pollTimer->interval()));
 
 	std::wstringstream text;
 
@@ -50,32 +54,14 @@ void MainWindow::update() {
 	ui->textBrowser->setText(QString::fromStdWString(text.str()));
 }
 
-void MainWindow::save() {
-	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-
-	QFile data(dataLocation + "/data.dat");
-
-	std::clog << "Save " << Process::_processHistory.size() << std::endl;
-
-	if(!QDir(dataLocation).exists()) {
-		QDir().mkpath(dataLocation);
-		std::clog << "Created directory " << dataLocation.toStdString() << std::endl;
-	}
-
-	if(data.open(QIODevice::WriteOnly | QIODevice::Text)) {
-		data.write("test");
-		data.close();
-	}
-	else {
-		QFileInfo info(data);
-		std::cerr << "Could not open file " << info.absoluteFilePath().toStdString() << std::endl;
-	}
-
-	Process::_processHistory.clear();
+void MainWindow::save()
+{
+	File::Update(Process::_processHistory);
 }
 
-void MainWindow::createTray() {
-	QSystemTrayIcon* trayIcon = new QSystemTrayIcon(QIcon(":/res/icon.png"), this);
+void MainWindow::createTray()
+{
+	QSystemTrayIcon *trayIcon = new QSystemTrayIcon(QIcon(":/res/icon.png"), this);
 
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray(QSystemTrayIcon::ActivationReason)));
 
@@ -93,19 +79,22 @@ void MainWindow::createTray() {
 	trayIcon->show();
 }
 
-void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason) {
-	if(reason == QSystemTrayIcon::DoubleClick) {
+void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason)
+{
+	if (reason == QSystemTrayIcon::DoubleClick) {
 		this->show();
 	}
 }
 
-void MainWindow::quit() {
+void MainWindow::quit()
+{
 	this->hide();
 	this->close();
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
-	if(!this->isHidden()) {
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+	if (!this->isHidden()) {
 		this->hide();
 		event->ignore();
 	}

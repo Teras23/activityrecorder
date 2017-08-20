@@ -2,8 +2,9 @@
 #include <iostream>
 #include <regex>
 #include <algorithm>
+#include <cctype>
 
-std::vector<Process> Process::_processHistory = std::vector<Process>();
+std::vector<std::pair<Process, int>> Process::_processHistory = std::vector<std::pair<Process, int>>();
 
 Process::Process(std::wstring title, std::wstring path) :
 	m_processTitle(title), m_processPath(path)
@@ -12,9 +13,9 @@ Process::Process(std::wstring title, std::wstring path) :
 	std::wsmatch match;
 	std::regex_search(path, match, nameRegex);
 
-	if(match.size() > 0) {
+	if (match.size() > 0) {
 		std::wstring name = match[match.size() - 1];
-		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+		std::transform(name.begin(), name.end(), name.begin(), std::tolower);
 		m_processName = name;
 	}
 	else {
@@ -22,39 +23,44 @@ Process::Process(std::wstring title, std::wstring path) :
 	}
 }
 
-std::wstring Process::getProcessTitle() {
+std::wstring Process::getProcessTitle()
+{
 	return m_processTitle;
 }
 
-std::wstring Process::getProcessPath() {
+std::wstring Process::getProcessPath()
+{
 	return m_processPath;
 }
 
-std::wstring Process::getProcessName() {
+std::wstring Process::getProcessName()
+{
 	return m_processName;
 }
 
-BOOL CALLBACK EnumChildWindowsCallback(HWND window, LPARAM lp) {
+BOOL CALLBACK EnumChildWindowsCallback(HWND window, LPARAM lp)
+{
 	DWORD *pids = (DWORD *)lp;
 	DWORD pid = 0;
 	GetWindowThreadProcessId(window, &pid);
-	if(pid != pids[0]) {
+	if (pid != pids[0]) {
 		pids[1] = pid;
 	}
 	return TRUE;
 }
 
-Process Process::getActiveProcess() {
+Process Process::getActiveProcess()
+{
 	HWND window = GetForegroundWindow();
 	std::wstring title = L"";
 	std::wstring path = L"";
 
-	if(window != NULL) {
+	if (window != NULL) {
 		const int MAX_TITLE_SIZE = 256;
 		wchar_t processTitle[MAX_TITLE_SIZE];
 		int response = GetWindowText(window, processTitle, MAX_TITLE_SIZE + 1);
 
-		if(response == 0) {
+		if (response == 0) {
 			title = L"null";
 		}
 		else {
@@ -70,10 +76,10 @@ Process Process::getActiveProcess() {
 
 		wchar_t processPath[MAX_PATH];
 
-		if(process != NULL) {
+		if (process != NULL) {
 			HMODULE hMod;
 			DWORD cb;
-			if(EnumProcessModules(process, &hMod, sizeof(hMod), &cb)) {
+			if (EnumProcessModules(process, &hMod, sizeof(hMod), &cb)) {
 				DWORD len = GetModuleFileNameEx(process, hMod, processPath, MAX_PATH);
 				path = std::wstring(processPath);
 			}
@@ -87,5 +93,5 @@ Process Process::getActiveProcess() {
 		CloseHandle(process);
 	}
 
-	return 	Process(title, path);
+	return Process(title, path);
 }

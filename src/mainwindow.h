@@ -6,13 +6,11 @@
 #include <QCloseEvent>
 
 namespace Ui {
-class MainWindow;
+	class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
 	Q_OBJECT
-
 public:
 	explicit MainWindow(QWidget *parent = 0);
 	~MainWindow();
@@ -25,6 +23,12 @@ private slots:
 
 private:
 	Ui::MainWindow *ui;
+
+	QTimer *m_pollTimer;
+	QTimer *m_saveTimer;
+
+	int m_pollTime;
+	int m_saveTime;
 
 	void createTray();
 	void closeEvent(QCloseEvent *event);

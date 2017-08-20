@@ -16,7 +16,7 @@ public:
 	std::wstring getProcessPath();
 	std::wstring getProcessName();
 
-	static std::vector<Process> _processHistory;
+	static std::vector<std::pair<Process, int>> _processHistory;
 
 private:
 	std::wstring m_processTitle;
