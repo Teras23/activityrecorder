@@ -18,7 +18,7 @@ public:
 	std::map<std::wstring, int> m_processes;
 	std::map<int, std::map<std::wstring, int>> m_processTitles;
 
-	FileData update();
+	FileData update(FileData);
 };
 
 #endif // FILEDATA_H

@@ -6,15 +6,13 @@ FileData::FileData()
 {
 	m_processes = std::map<std::wstring, int>();
 	m_processTitles = std::map<int, std::map<std::wstring, int>>();
-	m_processIndex = 1;
-	m_processTitleIndex = 1;
+	m_processIndex = 0;
+	m_processTitleIndex = 0;
 }
 
 
-FileData FileData::update()
+FileData FileData::update(FileData fileData)
 {
-	auto fileData = FileData();
-
 	auto processHistory = Process::_processHistory;
 
 	for (auto processPair : processHistory) {
@@ -42,8 +40,9 @@ FileData FileData::update()
 		else {
 			auto processTitleMap = m_processTitles.at(processIndex);
 
-			if (processTitleMap.find(process.getProcessTitle()) != processTitleMap.end()) {
-
+			if (processTitleMap.find(process.getProcessTitle()) == processTitleMap.end()) {
+				processTitleMap.insert(std::make_pair(process.getProcessTitle(), m_processTitleIndex));
+				m_processTitleIndex++;
 			}
 		}
 	}
