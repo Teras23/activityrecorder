@@ -13,11 +13,12 @@ public:
 	FileData();
 
 	int m_processIndex;
+	int m_processTitleIndex;
 
 	std::map<std::wstring, int> m_processes;
-	std::map<int, std::wstring> m_processTitles;
+	std::map<int, std::map<std::wstring, int>> m_processTitles;
 
-	FileData analize();
+	FileData update();
 };
 
 #endif // FILEDATA_H

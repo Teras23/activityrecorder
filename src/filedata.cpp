@@ -5,32 +5,46 @@
 FileData::FileData()
 {
 	m_processes = std::map<std::wstring, int>();
+	m_processTitles = std::map<int, std::map<std::wstring, int>>();
 	m_processIndex = 1;
+	m_processTitleIndex = 1;
 }
 
 
-FileData FileData::analize()
+FileData FileData::update()
 {
 	auto fileData = FileData();
 
 	auto processHistory = Process::_processHistory;
 
-	auto processes = std::map<std::wstring, int>();
-	auto processTitles = std::map<int, std::wstring>();
-
 	for (auto processPair : processHistory) {
 		auto process = processPair.first;
 		auto time = processPair.second;
 
-		int processIndex = 0;
+		auto processIndex = 0;
 
-		if (processes.find(process.getProcessName()) != processes.end()) {
-			processes.insert(std::make_pair(process.getProcessName(), m_processIndex));
+		if (m_processes.find(process.getProcessName()) == m_processes.end()) {
+			m_processes.insert(std::make_pair(process.getProcessName(), m_processIndex));
 			processIndex = m_processIndex;
 			m_processIndex++;
 		}
 		else {
-			processIndex = processes.at(process.getProcessName());
+			processIndex = m_processes.at(process.getProcessName());
+		}
+
+		if (m_processTitles.find(processIndex) == m_processTitles.end()) {
+			auto processTitleMap = std::map<std::wstring, int>();
+			processTitleMap.insert(std::make_pair(process.getProcessTitle(), m_processTitleIndex));
+			m_processTitleIndex++;
+
+			m_processTitles.insert(std::make_pair(processIndex, processTitleMap));
+		}
+		else {
+			auto processTitleMap = m_processTitles.at(processIndex);
+
+			if (processTitleMap.find(process.getProcessTitle()) != processTitleMap.end()) {
+
+			}
 		}
 	}
 

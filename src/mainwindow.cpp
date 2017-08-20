@@ -18,10 +18,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	this->setWindowIcon(icon);
 
 	QAction *saveAction = ui->actionSave;
+	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
+
 	m_pollTimer = new QTimer(this);
 	m_saveTimer = new QTimer(this);
 
-	connect(saveAction, SIGNAL(released()), this, SLOT(save()));
 	connect(m_pollTimer, SIGNAL(timeout()), this, SLOT(update()));
 	connect(m_saveTimer, SIGNAL(timeout()), this, SLOT(save()));
 
@@ -31,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	m_saveTime = 10000;
 
 	m_pollTimer->start(m_pollTime);
-	m_saveTimer->start(10000);
+	//m_saveTimer->start(10000);
 }
 
 MainWindow::~MainWindow()

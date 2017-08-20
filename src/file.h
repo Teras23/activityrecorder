@@ -8,10 +8,8 @@
 
 class File {
 public:
-	File();
-
-	static void Read();
-	static void Write();
+	static FileData Read();
+	static void Write(FileData);
 	static void Update(std::vector<std::pair<Process, int>>);
 };
 
