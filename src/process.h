@@ -1,8 +1,6 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include <windows.h>
-#include <Psapi.h>
 #include <string>
 #include <vector>
 

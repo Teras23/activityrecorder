@@ -1,6 +1,6 @@
 #include "file.h"
 
-#include <Qfile>
+#include <QFile>
 #include <QDir>
 #include <QStandardPaths>
 #include <QDataStream>
