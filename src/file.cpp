@@ -1,10 +1,10 @@
 #include "file.h"
-#include "filedata.h"
 
 #include <QFile>
 #include <QDir>
 #include <QStandardPaths>
 #include <QDataStream>
+#include <QDebug>
 #include <iostream>
 #include <map>
 
@@ -12,7 +12,7 @@ void File::write(FileData fileData)
 {
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-	QFile data(dataLocation + getFilePath());
+	QFile data(dataLocation + getFileName());
 
 	fileData.update(fileData);
 
@@ -57,7 +57,7 @@ FileData File::read()
 	auto fileData = FileData();
 
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-	QFile data(dataLocation + getFilePath());
+	QFile data(dataLocation + getFileName());
 
 	if (!QDir(dataLocation).exists()) {
 		return fileData;
@@ -112,11 +112,16 @@ void File::update(std::vector<std::pair<Process, int>> processHistory)
 	Process::_processHistory.clear();
 }
 
-QString File::getFilePath()
+QString File::getFileName()
 {
 #ifdef QT_DEBUG
 	return QString("/data_debug.dat");
 #else
 	return QString("/data.dat");
 #endif
+}
+
+QString File::getFilePath()
+{
+	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + getFileName();
 }

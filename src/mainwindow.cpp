@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "process.h"
 #include "file.h"
+#include "infowindow.h"
 
 #include <QTimer>
 
@@ -21,8 +22,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	QAction *saveAction = ui->actionSave;
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
 
+	InfoWindow *infoWindow = new InfoWindow(this);
+
 	QAction *infoAction = ui->actionInfo;
-	//connect(saveAction, SIGNAL(triggered()), info, SLOT(showInfo()));
+	connect(infoAction, SIGNAL(triggered()), infoWindow, SLOT(show()));
 
 	m_pollTimer = new QTimer(this);
 	m_saveTimer = new QTimer(this);

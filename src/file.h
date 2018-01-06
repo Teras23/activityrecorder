@@ -12,6 +12,7 @@ public:
 	static FileData read();
 	static void write(FileData);
 	static void update(std::vector<std::pair<Process, int>>);
+	static QString getFileName();
 	static QString getFilePath();
 };
 
