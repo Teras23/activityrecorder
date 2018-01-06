@@ -1,14 +1,14 @@
 #ifndef FILEDATA_H
 #define FILEDATA_H
+#include "entry.h"
 
 #include <map>
 #include <vector>
 #include <string>
 
-class FileData {
-private:
-	struct DataDay { };
+#include <QDataStream>
 
+class FileData {
 public:
 	FileData();
 
@@ -18,7 +18,11 @@ public:
 	std::map<std::wstring, int> m_processes;
 	std::map<int, std::map<std::wstring, int>> m_processTitles;
 
-	FileData update(FileData);
+    std::vector<Entry> m_entries;
+
+    FileData update(FileData, Entry);
 };
+
+QDataStream& operator<<(QDataStream&, const FileData&);
 
 #endif // FILEDATA_H

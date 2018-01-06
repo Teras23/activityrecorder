@@ -29,6 +29,7 @@ SOURCES +=  \
     src/mainwindow.cpp \
     src/process.cpp \
     src/file.cpp \
+    src/entry.cpp \
     src/filedata.cpp
 
 
@@ -36,7 +37,8 @@ HEADERS += \
     src/mainwindow.h \
     src/process.h \
     src/file.h \
-    src/filedata.cpp
+    src/filedata.h \
+    src/entry.h
 
 
 FORMS += \

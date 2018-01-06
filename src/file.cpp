@@ -13,8 +13,6 @@ void File::Write(FileData fileData)
 
 	QFile data(dataLocation + "/data.dat");
 
-	fileData.update(fileData);
-
 	if (!QDir(dataLocation).exists()) {
 		QDir().mkpath(dataLocation);
 		std::clog << "Created directory " << dataLocation.toStdString() << std::endl;
@@ -22,26 +20,8 @@ void File::Write(FileData fileData)
 
 	if (data.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QDataStream dataStream(&data);
-		dataStream << static_cast<qint32>(fileData.m_processIndex);
-		dataStream << static_cast<qint32>(fileData.m_processes.size());		//number of different processes				
 
-		for (auto process : fileData.m_processes) {
-			dataStream << static_cast<qint32>(process.second);				//id of the process	
-			dataStream << QString::fromStdWString(process.first);			//process name
-		}
-
-		dataStream << static_cast<qint32>(fileData.m_processTitleIndex);
-		dataStream << static_cast<qint32>(fileData.m_processTitles.size()); //number of different processes	
-
-		for (auto process : fileData.m_processTitles) {
-			dataStream << static_cast<qint32>(process.first);				//id of the process
-			dataStream << static_cast<qint32>(process.second.size());		//number of window titles for process				
-
-			for (auto processTitle : process.second) {
-				dataStream << static_cast<qint32>(processTitle.second);		//id of the window title
-				dataStream << QString::fromStdWString(processTitle.first);	//name of the process title
-			}
-		}
+        dataStream << fileData;
 
 		data.close();
 	}
@@ -102,9 +82,11 @@ FileData File::Read()
 	return fileData;
 }
 
-void File::Update(std::vector<std::pair<Process, int>> processHistory)
+void File::Update(Entry entry)
 {
 	auto fileData = Read();
+
+    fileData.update(fileData, entry);
 
 	Write(fileData);
 

@@ -10,13 +10,15 @@ public:
 
 	static Process getActiveProcess();
 
-	std::wstring getProcessTitle();
-	std::wstring getProcessPath();
-	std::wstring getProcessName();
+    std::wstring getProcessTitle();
+    std::wstring getProcessPath();
+    std::wstring getProcessName();
 
-	static std::vector<std::pair<Process, int>> _processHistory;
+    static std::vector<std::pair<Process, int>> _processHistory;
 
-private:
+    bool operator==(const Process &r) {
+        return (getProcessName() == r.m_processName) && (getProcessPath() == r.m_processPath);
+    }
 	std::wstring m_processTitle;
 	std::wstring m_processPath;
 	std::wstring m_processName;

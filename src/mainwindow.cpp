@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "process.h"
 #include "file.h"
+#include "entry.h"
 
 #include <QTimer>
 
@@ -44,7 +45,7 @@ void MainWindow::update()
 {
 	Process process = Process::getActiveProcess();
 
-	Process::_processHistory.push_back(std::make_pair(process, m_pollTimer->interval()));
+    Entry::getCurrent().update(process);
 
 	std::wstringstream text;
 
@@ -56,8 +57,8 @@ void MainWindow::update()
 }
 
 void MainWindow::save()
-{
-	File::Update(Process::_processHistory);
+{   
+    File::Update(Entry::endCurrent());
 }
 
 void MainWindow::createTray()
@@ -95,8 +96,10 @@ void MainWindow::quit()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+#ifndef QT_DEBUG
 	if (!this->isHidden()) {
 		this->hide();
 		event->ignore();
 	}
+#endif
 }
