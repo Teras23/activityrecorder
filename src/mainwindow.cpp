@@ -3,6 +3,7 @@
 #include "process.h"
 #include "file.h"
 #include "entry.h"
+#include "infowindow.h"
 
 #include <QTimer>
 
@@ -15,11 +16,17 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	QIcon icon(":/res/icon.png");
+	QIcon icon = getIcon();
+
 	this->setWindowIcon(icon);
 
 	QAction *saveAction = ui->actionSave;
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
+
+	InfoWindow *infoWindow = new InfoWindow(this);
+
+	QAction *infoAction = ui->actionInfo;
+	connect(infoAction, SIGNAL(triggered()), infoWindow, SLOT(show()));
 
 	m_pollTimer = new QTimer(this);
 	m_saveTimer = new QTimer(this);
@@ -41,6 +48,16 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
+QIcon MainWindow::getIcon()
+{
+#ifdef QT_DEBUG
+	return QIcon(":/res/icon_debug.png");
+#else
+	return QIcon(":/res/icon.png");
+#endif
+}
+
+
 void MainWindow::update()
 {
 	Process process = Process::getActiveProcess();
@@ -58,12 +75,12 @@ void MainWindow::update()
 
 void MainWindow::save()
 {   
-    File::Update(Entry::endCurrent());
+    File::update(Entry::endCurrent());
 }
 
 void MainWindow::createTray()
 {
-	QSystemTrayIcon *trayIcon = new QSystemTrayIcon(QIcon(":/res/icon.png"), this);
+	QSystemTrayIcon *trayIcon = new QSystemTrayIcon(getIcon(), this);
 
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray(QSystemTrayIcon::ActivationReason)));
 
@@ -86,6 +103,11 @@ void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason)
 	if (reason == QSystemTrayIcon::DoubleClick) {
 		this->show();
 	}
+}
+
+void MainWindow::showInfo()
+{
+	
 }
 
 void MainWindow::quit()

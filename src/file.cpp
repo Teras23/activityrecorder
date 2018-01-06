@@ -4,14 +4,15 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QDataStream>
+#include <QDebug>
 #include <iostream>
 #include <map>
 
-void File::Write(FileData fileData)
+void File::write(FileData fileData)
 {
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-	QFile data(dataLocation + "/data.dat");
+	QFile data(dataLocation + getFileName());
 
 	if (!QDir(dataLocation).exists()) {
 		QDir().mkpath(dataLocation);
@@ -31,12 +32,12 @@ void File::Write(FileData fileData)
 	}
 }
 
-FileData File::Read()
+FileData File::read()
 {
 	auto fileData = FileData();
 
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-	QFile data(dataLocation + "/data.dat");
+	QFile data(dataLocation + getFileName());
 
 	if (!QDir(dataLocation).exists()) {
 		return fileData;
@@ -82,13 +83,27 @@ FileData File::Read()
 	return fileData;
 }
 
-void File::Update(Entry entry)
+void File::update(Entry entry)
 {
-	auto fileData = Read();
+	auto fileData = read();
 
     fileData.update(fileData, entry);
 
-	Write(fileData);
+    write(fileData);
 
 	Process::_processHistory.clear();
+}
+
+QString File::getFileName()
+{
+#ifdef QT_DEBUG
+	return QString("/data_debug.dat");
+#else
+	return QString("/data.dat");
+#endif
+}
+
+QString File::getFilePath()
+{
+	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + getFileName();
 }
