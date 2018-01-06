@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	QAction *saveAction = ui->actionSave;
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
 
+	QAction *infoAction = ui->actionInfo;
+	//connect(saveAction, SIGNAL(triggered()), info, SLOT(showInfo()));
+
 	m_pollTimer = new QTimer(this);
 	m_saveTimer = new QTimer(this);
 
@@ -68,7 +71,7 @@ void MainWindow::update()
 
 void MainWindow::save()
 {
-	File::Update(Process::_processHistory);
+	File::update(Process::_processHistory);
 }
 
 void MainWindow::createTray()
@@ -96,6 +99,11 @@ void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason)
 	if (reason == QSystemTrayIcon::DoubleClick) {
 		this->show();
 	}
+}
+
+void MainWindow::showInfo()
+{
+	
 }
 
 void MainWindow::quit()
