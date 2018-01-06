@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	QIcon icon(":/res/icon.png");
+	QIcon icon = getIcon();
+
 	this->setWindowIcon(icon);
 
 	QAction *saveAction = ui->actionSave;
@@ -40,6 +41,16 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
+QIcon MainWindow::getIcon()
+{
+#ifdef QT_DEBUG
+	return QIcon(":/res/icon_debug.png");
+#else
+	return QIcon(":/res/icon.png");
+#endif
+}
+
+
 void MainWindow::update()
 {
 	Process process = Process::getActiveProcess();
@@ -62,7 +73,7 @@ void MainWindow::save()
 
 void MainWindow::createTray()
 {
-	QSystemTrayIcon *trayIcon = new QSystemTrayIcon(QIcon(":/res/icon.png"), this);
+	QSystemTrayIcon *trayIcon = new QSystemTrayIcon(getIcon(), this);
 
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(toggleTray(QSystemTrayIcon::ActivationReason)));
 

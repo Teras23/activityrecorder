@@ -22,6 +22,8 @@ private slots:
 	void save();
 
 private:
+	QIcon getIcon();
+
 	Ui::MainWindow *ui;
 
 	QTimer *m_pollTimer;
