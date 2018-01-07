@@ -12,7 +12,7 @@ class File {
 public:
 	static FileData read();
 	static void write(FileData);
-    static void update(Entry);
+	static FileData update(Entry);
 	static QString getFileName();
 	static QString getFilePath();
 };

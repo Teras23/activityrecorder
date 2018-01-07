@@ -6,6 +6,7 @@
 
 class Process {
 public:
+	Process();
 	Process(std::wstring title, std::wstring path);
 
 	static Process getActiveProcess();
@@ -13,8 +14,6 @@ public:
     std::wstring getProcessTitle();
     std::wstring getProcessPath();
     std::wstring getProcessName();
-
-    static std::vector<std::pair<Process, int>> _processHistory;
 
     bool operator==(const Process &r) {
         return (getProcessName() == r.m_processName) && (getProcessPath() == r.m_processPath);

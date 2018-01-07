@@ -4,8 +4,12 @@
 #include "file.h"
 #include "entry.h"
 #include "infowindow.h"
+#include "processinfo.h"
+#include "filedatainfowindow.h"
+#include "filedata.h"
 
 #include <QTimer>
+#include <QMessageBox>
 
 #include <sstream>
 #include <iostream>
@@ -28,6 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	QAction *infoAction = ui->actionInfo;
 	connect(infoAction, SIGNAL(triggered()), infoWindow, SLOT(show()));
 
+    QAction *fileDataInfoAction = ui->actionFileData_Info;
+    connect(fileDataInfoAction, SIGNAL(triggered()), this, SLOT(showFileDataInfoWindow()));
+
 	m_pollTimer = new QTimer(this);
 	m_saveTimer = new QTimer(this);
 
@@ -35,6 +42,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(m_saveTimer, SIGNAL(timeout()), this, SLOT(save()));
 
 	createTray();
+
+    m_entry = Entry();
 
 	m_pollTime = 1000;
 	m_saveTime = 10000;
@@ -62,7 +71,7 @@ void MainWindow::update()
 {
 	Process process = Process::getActiveProcess();
 
-    Entry::getCurrent().update(process);
+    m_entry.update(ProcessInfo(process));
 
 	std::wstringstream text;
 
@@ -75,7 +84,21 @@ void MainWindow::update()
 
 void MainWindow::save()
 {   
-    File::update(Entry::endCurrent());
+    m_entry.endCurrent();
+    File::update(m_entry);
+    QMessageBox* saveInfo = new QMessageBox(this);
+    saveInfo->setText("Saved!");
+    saveInfo->show();
+}
+
+void MainWindow::showFileDataInfoWindow()
+{
+    m_entry.endCurrent();
+    auto fileData = File::update(m_entry);
+
+    FileDataInfoWindow *infoWindow = new FileDataInfoWindow(this);
+    infoWindow->changeText(fileData);
+    infoWindow->show();
 }
 
 void MainWindow::createTray()
@@ -105,11 +128,6 @@ void MainWindow::toggleTray(QSystemTrayIcon::ActivationReason reason)
 	}
 }
 
-void MainWindow::showInfo()
-{
-	
-}
-
 void MainWindow::quit()
 {
 	this->hide();
@@ -124,4 +142,5 @@ void MainWindow::closeEvent(QCloseEvent *event)
 		event->ignore();
 	}
 #endif
+    event->accept();
 }

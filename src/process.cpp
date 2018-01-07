@@ -10,7 +10,10 @@
 #include <Psapi.h>
 #endif
 
-std::vector<std::pair<Process, int>> Process::_processHistory = std::vector<std::pair<Process, int>>();
+Process::Process() :
+	m_processTitle(L"null"), m_processPath(L"null")
+{
+}
 
 Process::Process(std::wstring title, std::wstring path) :
 	m_processTitle(title), m_processPath(path)

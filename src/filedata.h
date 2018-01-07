@@ -12,6 +12,9 @@ class FileData {
 public:
 	FileData();
 
+    QString m_magic;
+    QString m_version;
+
 	int m_processIndex;
 	int m_processTitleIndex;
 
@@ -21,8 +24,10 @@ public:
     std::vector<Entry> m_entries;
 
     FileData update(FileData, Entry);
+    bool isValid();
 };
 
 QDataStream& operator<<(QDataStream&, const FileData&);
+QDataStream& operator>>(QDataStream&, FileData&);
 
 #endif // FILEDATA_H
