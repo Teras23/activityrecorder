@@ -16,9 +16,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	QIcon icon = getIcon();
-
-	this->setWindowIcon(icon);
+    this->setWindowIcon(getIcon());
+#ifdef QT_DEBUG
+    this->setWindowTitle("Activity Recorder Debug");
+#else
+    this->setWindowTitle("Activity Recorder");
+#endif
 
 	QAction *saveAction = ui->actionSave;
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
