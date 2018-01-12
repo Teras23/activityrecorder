@@ -46,52 +46,26 @@ FileData File::read()
 	if (data.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QDataStream dataStream(&data);
 
-		int processIndex, processesSize;
-		dataStream >> processIndex >> processesSize;
-		fileData.m_processIndex = processIndex;
-
-		for (auto i = 0; i < processesSize; i++) {
-			int processId;
-			QString processName;
-			dataStream >> processId >> processName;
-			fileData.m_processes.insert(std::make_pair(processName.toStdWString(), processId));
-		}
-
-		int processTitleIndex, processTitlesSize;
-		dataStream >> processTitleIndex >> processTitlesSize;
-		fileData.m_processTitleIndex = processTitleIndex;
-
-		for (auto i = 0; i < processTitlesSize; i++) {
-			int processId;
-			int processWindowSize;
-
-			dataStream >> processId >> processWindowSize;
-
-			auto windows = std::map<std::wstring, int>();
-
-			for (auto j = 0; j < processWindowSize; j++) {
-				int windowId;
-				QString windowName;
-				dataStream >> windowId >> windowName;
-				windows.insert(std::make_pair(windowName.toStdWString(), windowId));
-			}
-
-			fileData.m_processTitles.insert(std::make_pair(processId, windows));
-		}
+        dataStream >> fileData;
 	}
 
 	return fileData;
 }
 
-void File::update(Entry entry)
+FileData File::update(Entry entry)
 {
-	auto fileData = read();
+    auto fileData = read();
 
-    fileData.update(fileData, entry);
+    if(!fileData.isValid()) {
+        qDebug() << "DATA FORMAT IS NOT VALID!";
+        //TODO: make backup of old file and start again
+        return fileData;
+    }
 
-    write(fileData);
+    //fileData.update(fileData, entry);
 
-	Process::_processHistory.clear();
+    //write(fileData);
+    return fileData;
 }
 
 QString File::getFileName()
