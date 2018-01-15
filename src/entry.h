@@ -14,7 +14,7 @@ public:
     QTime m_endTime;
 	std::vector<ProcessInfo> m_processBuffer;
 
-	void update(ProcessInfo);
+    void update(ProcessInfo);
 	void endCurrent();
 };
 

@@ -27,6 +27,7 @@ public:
     std::vector<Entry> m_entries;
 
     FileData update(FileData, Entry);
+    Entry updateProcessTitleIds(Entry);
     void createReverse();
     bool isValid();
     bool isEmpty();

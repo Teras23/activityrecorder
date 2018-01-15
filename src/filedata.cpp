@@ -59,11 +59,25 @@ FileData FileData::update(FileData fileData, Entry entry)
         }
     }
 
+    entry = updateProcessTitleIds(entry);
+
     m_entries.push_back(entry);
 
     m_empty = false;
 
     return fileData;
+}
+
+Entry FileData::updateProcessTitleIds(Entry entry)
+{
+    for(int i = 0; i < entry.m_processBuffer.size(); i++) {
+        Process process = entry.m_processBuffer[i].getProcess();
+        std::wstring processPath = process.getProcessPath();
+        int processId = m_processes.at(processPath);
+        int windowId = m_processTitles.at(processId).at(process.getProcessTitle());
+        entry.m_processBuffer[i].setProcessTitleId(windowId);
+    }
+    return entry;
 }
 
 void FileData::createReverse()
@@ -136,7 +150,7 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
     in >> fd.m_version;
 
     //process tree
-    int processesSize;
+    qint32 processesSize;
     in >> fd.m_processIndex;
     in >> processesSize;
 
@@ -148,20 +162,20 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
     }
 
     //window title tree
-    int processTitlesSize;
+    qint32 processTitlesSize;
     in >> fd.m_processTitleIndex;
     in >> processTitlesSize;
 
     for (auto i = 0; i < processTitlesSize; i++) {
-        int processId;
-        int processWindowSize;
+        qint32 processId;
+        qint32 processWindowSize;
 
         in >> processId >> processWindowSize;
 
         auto windows = std::map<std::wstring, int>();
 
         for (auto j = 0; j < processWindowSize; j++) {
-            int windowId;
+            qint32 windowId;
             QString windowName;
             in >> windowId >> windowName;
             windows.insert(std::make_pair(windowName.toStdWString(), windowId));
@@ -171,7 +185,7 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
     }
 
     //entries
-    int entriesSize;
+    qint32 entriesSize;
     in >> entriesSize;
 
     for (int i = 0; i < entriesSize; i++) {

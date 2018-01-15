@@ -15,10 +15,13 @@ public:
 
 	Process getProcess();
 	QTime getRecordedTime();
+    int getProcessTitleId();
+    void setProcessTitleId(int);
 
 private:
     QTime m_recordedTime;
 	Process m_process;
+    int m_processTitleId;
 };
 
 QDataStream& operator<<(QDataStream&, ProcessInfo&);

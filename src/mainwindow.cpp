@@ -89,6 +89,7 @@ void MainWindow::save()
 {   
     m_entry.endCurrent();
     FileData fileData = File::update(m_entry);
+    m_entry = Entry();
     QMessageBox* saveInfo = new QMessageBox(this);
     saveInfo->setText("Saved!");
     saveInfo->show();
@@ -115,6 +116,24 @@ void MainWindow::updateFileDataInfo(FileData fileData)
         }
         tree->addTopLevelItem(item);
     }
+
+    QTreeWidget *entryTree = ui->entriesTreeWidget;
+    entryTree->clear();
+
+    for(auto entry : fileData.m_entries) {
+        QTreeWidgetItem *item = new QTreeWidgetItem(0);
+        item->setText(0, QString(entry.m_startTime.toString() + " -> " + entry.m_endTime.toString()));
+
+        for(auto processInfo : entry.m_processBuffer)
+        {
+            QTreeWidgetItem *subitem = new QTreeWidgetItem(0);
+            subitem->setText(0, processInfo.getRecordedTime().toString());
+            subitem->setText(1, QString::number(processInfo.getProcessTitleId()));
+            item->addChild(subitem);
+        }
+        entryTree->addTopLevelItem(item);
+    }
+    entryTree->resizeColumnToContents(0);
 }
 
 void MainWindow::createTray()
