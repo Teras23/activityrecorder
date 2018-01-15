@@ -10,20 +10,185 @@
     <height>293</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTextBrowser" name="textBrowser">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>11</y>
-      <width>491</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="infoTab">
+       <attribute name="title">
+        <string>Info</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinAndMaxSize</enum>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>472</width>
+            <height>100</height>
+           </size>
+          </property>
+          <property name="title">
+           <string>Current Process Info</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <widget class="QWidget" name="horizontalLayoutWidget">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>441</width>
+             <height>55</height>
+            </rect>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <item>
+             <layout class="QVBoxLayout" name="currentActivityTexts">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetMaximumSize</enum>
+              </property>
+              <item>
+               <widget class="QLabel" name="currentActivityNameText">
+                <property name="maximumSize">
+                 <size>
+                  <width>36</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Name:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="currentActivityTitleText">
+                <property name="maximumSize">
+                 <size>
+                  <width>36</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Title:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="currentActivityPathText">
+                <property name="maximumSize">
+                 <size>
+                  <width>36</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Path:</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="currentActivityVariables">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="currentActivityName">
+                <property name="text">
+                 <string>name</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="currentActivityTitle">
+                <property name="text">
+                 <string>title</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="currentActivityPath">
+                <property name="text">
+                 <string>path</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Windows</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QTreeWidget" name="windowsTreeWidget">
+          <column>
+           <property name="text">
+            <string>Id</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -38,9 +203,9 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
     <addaction name="actionInfo"/>
-    <addaction name="actionFileData_Info"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -58,6 +223,11 @@
   <action name="actionFileData_Info">
    <property name="text">
     <string>FileData Info</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Load</string>
    </property>
   </action>
  </widget>

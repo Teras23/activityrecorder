@@ -8,6 +8,8 @@
 #include <iostream>
 #include <map>
 
+FileData File::fileData = FileData();
+
 void File::write(FileData fileData)
 {
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
@@ -52,19 +54,28 @@ FileData File::read()
 	return fileData;
 }
 
+FileData File::load()
+{
+    fileData = read();
+
+    return fileData;
+}
+
 FileData File::update(Entry entry)
 {
-    auto fileData = read();
+    if(fileData.isEmpty()) {
+        fileData = read();
 
-    if(!fileData.isValid()) {
-        qDebug() << "DATA FORMAT IS NOT VALID!";
-        //TODO: make backup of old file and start again
-        return fileData;
+        if(!fileData.isValid()) {
+            qDebug() << "DATA FORMAT IS NOT VALID!";
+            //TODO: make backup of old file and start again
+            return fileData;
+        }
     }
 
-    //fileData.update(fileData, entry);
+    fileData.update(fileData, entry);
 
-    //write(fileData);
+    write(fileData);
     return fileData;
 }
 

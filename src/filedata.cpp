@@ -8,6 +8,7 @@
 FileData::FileData()
 {
     m_processes = std::map<std::wstring, int>();
+    m_processesReverse = std::map<int, std::wstring>();
     m_processTitles = std::map<int, std::map<std::wstring, int>>();
     m_processIndex = 0;
     m_processTitleIndex = 0;
@@ -16,6 +17,7 @@ FileData::FileData()
 
     m_magic = QString(MAGIC);
     m_version = QString(VERSION);
+    m_empty = true;
 }
 
 
@@ -59,7 +61,18 @@ FileData FileData::update(FileData fileData, Entry entry)
 
     m_entries.push_back(entry);
 
+    m_empty = false;
+
     return fileData;
+}
+
+void FileData::createReverse()
+{
+    m_processesReverse.clear();
+
+    for(auto process : m_processes) {
+        m_processesReverse.insert(std::make_pair(process.second, process.first));
+    }
 }
 
 bool FileData::isValid()
@@ -72,6 +85,11 @@ bool FileData::isValid()
         return false;
     }
     return true;
+}
+
+bool FileData::isEmpty()
+{
+    return m_empty;
 }
 
 QDataStream& operator<<(QDataStream& out, const FileData &fd)
@@ -103,12 +121,11 @@ QDataStream& operator<<(QDataStream& out, const FileData &fd)
     }
 
     //entries
-
     out << static_cast<qint32>(fd.m_entries.size());
 
-//        for (auto entry : fs.m_entries) {
-
-//        }
+    for (auto entry : fd.m_entries) {
+        out << entry;
+    }
 
     return out;
 }
@@ -130,6 +147,7 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
         fd.m_processes.insert(std::make_pair(processName.toStdWString(), processId));
     }
 
+    //window title tree
     int processTitlesSize;
     in >> fd.m_processTitleIndex;
     in >> processTitlesSize;
@@ -151,5 +169,18 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
 
         fd.m_processTitles.insert(std::make_pair(processId, windows));
     }
+
+    //entries
+    int entriesSize;
+    in >> entriesSize;
+
+    for (int i = 0; i < entriesSize; i++) {
+        Entry entry;
+        in >> entry;
+        fd.m_entries.push_back(entry);
+    }
+
+    fd.createReverse();
+
     return in;
 }

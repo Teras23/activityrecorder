@@ -18,4 +18,7 @@ public:
 	void endCurrent();
 };
 
+QDataStream& operator<<(QDataStream&, const Entry&);
+QDataStream& operator>>(QDataStream&, Entry&);
+
 #endif // ENTRY_H

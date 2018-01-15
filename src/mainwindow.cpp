@@ -5,7 +5,6 @@
 #include "entry.h"
 #include "infowindow.h"
 #include "processinfo.h"
-#include "filedatainfowindow.h"
 #include "filedata.h"
 
 #include <QTimer>
@@ -26,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
 #else
     this->setWindowTitle("Activity Recorder");
 #endif
+    QAction *loadAction = ui->actionLoad;
+    connect(loadAction, SIGNAL(triggered()), this, SLOT(load()));
 
 	QAction *saveAction = ui->actionSave;
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
@@ -34,9 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	QAction *infoAction = ui->actionInfo;
 	connect(infoAction, SIGNAL(triggered()), infoWindow, SLOT(show()));
-
-    QAction *fileDataInfoAction = ui->actionFileData_Info;
-    connect(fileDataInfoAction, SIGNAL(triggered()), this, SLOT(showFileDataInfoWindow()));
 
 	m_pollTimer = new QTimer(this);
 	m_saveTimer = new QTimer(this);
@@ -76,32 +74,47 @@ void MainWindow::update()
 
     m_entry.update(ProcessInfo(process));
 
-	std::wstringstream text;
+    ui->currentActivityName->setText(QString::fromStdWString(process.getProcessName()));
+    ui->currentActivityTitle->setText(QString::fromStdWString(process.getProcessTitle()));
+    ui->currentActivityPath->setText(QString::fromStdWString(process.getProcessPath()));
+}
 
-	text << "Name: " << process.getProcessName() << std::endl;
-	text << "Title: " << process.getProcessTitle() << std::endl;
-	text << "Path: " << process.getProcessPath() << std::endl;
-
-	ui->textBrowser->setText(QString::fromStdWString(text.str()));
+void MainWindow::load()
+{
+    FileData fileData = File::load();
+    updateFileDataInfo(fileData);
 }
 
 void MainWindow::save()
 {   
     m_entry.endCurrent();
-    File::update(m_entry);
+    FileData fileData = File::update(m_entry);
     QMessageBox* saveInfo = new QMessageBox(this);
     saveInfo->setText("Saved!");
     saveInfo->show();
+    updateFileDataInfo(fileData);
 }
 
-void MainWindow::showFileDataInfoWindow()
+void MainWindow::updateFileDataInfo(FileData fileData)
 {
-    m_entry.endCurrent();
-    auto fileData = File::update(m_entry);
+    QTreeWidget *tree = ui->windowsTreeWidget;
 
-    FileDataInfoWindow *infoWindow = new FileDataInfoWindow(this);
-    infoWindow->changeText(fileData);
-    infoWindow->show();
+    tree->clear();
+
+    for(auto process : fileData.m_processTitles) {
+        QTreeWidgetItem *item = new QTreeWidgetItem(0);
+        item->setText(0, QString::number(process.first));
+        item->setText(1, QString::fromStdWString(fileData.m_processesReverse.at(process.first)));
+
+        for(auto title : process.second)
+        {
+            QTreeWidgetItem *subitem = new QTreeWidgetItem(0);
+            subitem->setText(0, QString::number(title.second));
+            subitem->setText(1, QString::fromStdWString(title.first));
+            item->addChild(subitem);
+        }
+        tree->addTopLevelItem(item);
+    }
 }
 
 void MainWindow::createTray()

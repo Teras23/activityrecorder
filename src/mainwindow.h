@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include "entry.h"
+#include "filedata.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -21,8 +22,8 @@ private slots:
 	void update();
 	void toggleTray(QSystemTrayIcon::ActivationReason);
 	void quit();
-	void save();
-	void showFileDataInfoWindow();
+    void load();
+    void save();
 
 private:
 	QIcon getIcon();
@@ -36,6 +37,7 @@ private:
 	int m_saveTime;
 
 	void createTray();
+    void updateFileDataInfo(FileData);
 	void closeEvent(QCloseEvent *event);
 
 	Entry m_entry;

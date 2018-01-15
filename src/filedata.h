@@ -18,13 +18,18 @@ public:
 	int m_processIndex;
 	int m_processTitleIndex;
 
+    bool m_empty;
+
 	std::map<std::wstring, int> m_processes;
+    std::map<int, std::wstring> m_processesReverse;
 	std::map<int, std::map<std::wstring, int>> m_processTitles;
 
     std::vector<Entry> m_entries;
 
     FileData update(FileData, Entry);
+    void createReverse();
     bool isValid();
+    bool isEmpty();
 };
 
 QDataStream& operator<<(QDataStream&, const FileData&);

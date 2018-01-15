@@ -32,8 +32,7 @@ SOURCES +=  \
     src/entry.cpp \
     src/infowindow.cpp \
     src/filedata.cpp \
-    src/processinfo.cpp \
-    src/filedatainfowindow.cpp
+    src/processinfo.cpp
 
 
 HEADERS += \
@@ -49,8 +48,7 @@ HEADERS += \
 
 FORMS += \
     src/mainwindow.ui \
-    src/infowindow.ui \
-    src/filedatainfowindow.ui
+    src/infowindow.ui
 
 RESOURCES += \
     resources.qrc
