@@ -11,6 +11,7 @@ FileData::FileData()
     m_processes = std::map<std::wstring, int>();
     m_processesReverse = std::map<int, std::wstring>();
     m_processTitles = std::map<int, std::map<std::wstring, int>>();
+    m_processTitlesDirect = std::map<int, std::wstring>();
     m_processIndex = 0;
     m_processTitleIndex = 0;
 
@@ -36,7 +37,6 @@ void FileData::update(Entry* entry)
 
     for (auto processPair : processHistory) {
         auto process = processPair.getProcess();
-        auto time = processPair.getRecordedTime();
 
         auto processIndex = 0;
 
@@ -51,6 +51,7 @@ void FileData::update(Entry* entry)
 
         if (m_processTitles.find(processIndex) == m_processTitles.end()) {
             auto processTitleMap = std::map<std::wstring, int>();
+            m_processTitlesDirect.insert(std::make_pair(m_processTitleIndex, process.getProcessTitle()));
             processTitleMap.insert(std::make_pair(process.getProcessTitle(), m_processTitleIndex));
             m_processTitleIndex++;
 

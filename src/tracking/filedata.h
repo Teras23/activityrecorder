@@ -24,6 +24,7 @@ public:
 	std::map<std::wstring, int> m_processes;
     std::map<int, std::wstring> m_processesReverse;
 	std::map<int, std::map<std::wstring, int>> m_processTitles;
+    std::map<int, std::wstring> m_processTitlesDirect;
 
     std::vector<Entry*> m_entries;
 

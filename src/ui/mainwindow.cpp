@@ -9,6 +9,7 @@
 
 #include <QTimer>
 #include <QMessageBox>
+#include <QDebug>
 
 #include <sstream>
 #include <iostream>
@@ -47,13 +48,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	createTray();
 
+    m_statistics = Statistics();
+
     m_entry = new Entry();
 
-    m_pollTime = 3000; //10 seconds
-    m_saveTime = 60000; //1 minute
+    m_pollTime = 2000; //10 seconds
+    m_saveTime = 5000; //1 minute
 
 	m_pollTimer->start(m_pollTime);
     m_saveTimer->start(m_saveTime);
+    update();
 }
 
 MainWindow::~MainWindow()
@@ -157,7 +161,32 @@ void MainWindow::updateFileDataInfo(FileData fileData)
 
     QTreeWidget *statisticsTree = ui->statisticsTreeWidget;
 
-    File::generateStatistics();
+    for(int i = 0; i < fileData.m_entries.size(); i++) {
+        auto entry = fileData.m_entries[i];
+        m_statistics.update(entry);
+    }
+
+    statisticsTree->clear();
+
+    for(auto it = m_statistics.m_titleIdDurationMap.begin(); it != m_statistics.m_titleIdDurationMap.end(); ++it) {
+        QTreeWidgetItem *item = new QTreeWidgetItem(0);
+
+        QString title;
+
+        if(m_statistics.m_idTitleMap.find(it->first) == m_statistics.m_idTitleMap.end()) {
+            title = QString::fromStdWString(fileData.m_processTitlesDirect[it->first]);
+            m_statistics.m_idTitleMap[it->first] = fileData.m_processTitlesDirect[it->first];
+        }
+        else {
+            title = QString::fromStdWString(m_statistics.m_idTitleMap[it->first]);
+        }
+
+        item->setText(0, title);
+        item->setText(1, QString::number(it->second/1000) + "s");
+
+        qDebug() << it->first << " " << it->second << " " << title;
+        statisticsTree->addTopLevelItem(item);
+    }
 }
 
 void MainWindow::createTray()

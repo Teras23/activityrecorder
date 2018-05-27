@@ -106,13 +106,7 @@ QString File::getFileName()
 }
 
 Statistics File::generateStatistics() {
-    auto statistics = Statistics();
-
-    for(auto entry : fileData->m_entries) {
-        statistics.update(entry);
-    }
-
-    return statistics;
+    return Statistics();
 }
 
 QString File::getFilePath()

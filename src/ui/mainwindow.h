@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 #include "../tracking/entry.h"
 #include "../tracking/filedata.h"
+#include "statistics.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
@@ -36,6 +37,8 @@ private:
 
 	int m_pollTime;
 	int m_saveTime;
+
+    Statistics m_statistics;
 
 	void createTray();
     void updateFileDataInfo(FileData);

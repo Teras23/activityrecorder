@@ -12,10 +12,12 @@ class Statistics
 public:
     Statistics();
 
-    std::map<std::wstring, std::map<std::wstring, QDateTime> > m_stats;
+    std::map<std::wstring, std::map<std::wstring, qint64> > m_stats;
+    std::map<int, qint64> m_titleIdDurationMap;
+
+    std::map<int, std::wstring> m_idTitleMap;
 
     void update(Entry*);
-    void addWindow(std::wstring, QDateTime);
 };
 
 #endif // STATISTICS_H
