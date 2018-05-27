@@ -13,17 +13,25 @@ FileData::FileData()
     m_processIndex = 0;
     m_processTitleIndex = 0;
 
-    m_entries = std::vector<Entry>();
+    m_entries = std::vector<Entry*>();
 
     m_magic = QString(MAGIC);
     m_version = QString(VERSION);
     m_empty = true;
 }
 
+FileData::~FileData() {
+    for (auto it = m_entries.begin(); it != m_entries.end(); it++) {
+        if(*it != nullptr) {
+            //delete *it;
+        }
+    }
+    m_entries.clear();
+}
 
-FileData FileData::update(FileData fileData, Entry entry)
+void FileData::update(Entry* entry)
 {
-    auto processHistory = entry.m_processBuffer;
+    auto processHistory = entry->m_processBuffer;
 
     for (auto processPair : processHistory) {
         auto process = processPair.getProcess();
@@ -59,27 +67,24 @@ FileData FileData::update(FileData fileData, Entry entry)
         }
     }
 
-    entry = updateProcessTitleIds(entry);
+    updateProcessTitleIds(entry);
 
     m_entries.push_back(entry);
 
     m_empty = false;
 
     createReverse();
-
-    return fileData;
 }
 
-Entry FileData::updateProcessTitleIds(Entry entry)
+void FileData::updateProcessTitleIds(Entry* entry)
 {
-    for(int i = 0; i < entry.m_processBuffer.size(); i++) {
-        Process process = entry.m_processBuffer[i].getProcess();
+    for(int i = 0; i < entry->m_processBuffer.size(); i++) {
+        Process process = entry->m_processBuffer[i].getProcess();
         std::wstring processPath = process.getProcessPath();
         int processId = m_processes.at(processPath);
         int windowId = m_processTitles.at(processId).at(process.getProcessTitle());
-        entry.m_processBuffer[i].setProcessTitleId(windowId);
+        entry->m_processBuffer[i].setProcessTitleId(windowId);
     }
-    return entry;
 }
 
 void FileData::createReverse()
@@ -140,7 +145,7 @@ QDataStream& operator<<(QDataStream& out, const FileData &fd)
     out << static_cast<qint32>(fd.m_entries.size());
 
     for (auto entry : fd.m_entries) {
-        out << entry;
+        out << *entry;
     }
 
     return out;
@@ -193,7 +198,8 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
     for (int i = 0; i < entriesSize; i++) {
         Entry entry;
         in >> entry;
-        fd.m_entries.push_back(entry);
+        Entry* entryPointer = new Entry(entry);
+        fd.m_entries.push_back(entryPointer);
     }
 
     fd.createReverse();

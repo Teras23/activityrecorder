@@ -9,6 +9,13 @@ Entry::Entry()
 	m_processBuffer = std::vector<ProcessInfo>();
 }
 
+Entry::Entry(Entry& entry)
+{
+    m_startTime = entry.m_startTime;
+    m_endTime = entry.m_endTime;
+    m_processBuffer = entry.m_processBuffer;
+}
+
 void Entry::update(ProcessInfo processInfo) {
 	m_processBuffer.push_back(processInfo);
 }

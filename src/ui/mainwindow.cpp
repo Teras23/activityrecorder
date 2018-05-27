@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	createTray();
 
-    m_entry = Entry();
+    m_entry = new Entry();
 
 	m_pollTime = 1000;
 	m_saveTime = 10000;
@@ -58,6 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    File::cleanFileData();
+
+    if(m_entry != nullptr) {
+        delete m_entry;
+    }
 	delete ui;
 }
 
@@ -75,7 +80,7 @@ void MainWindow::update()
 {
 	Process process = Process::getActiveProcess();
 
-    m_entry.update(ProcessInfo(process));
+    m_entry->update(ProcessInfo(process));
 
     ui->currentActivityName->setText(QString::fromStdWString(process.getProcessName()));
     ui->currentActivityTitle->setText(QString::fromStdWString(process.getProcessTitle()));
@@ -84,30 +89,30 @@ void MainWindow::update()
 
 void MainWindow::load()
 {
-    FileData fileData = File::load();
-    updateFileDataInfo(fileData);
+    FileData* fileData = File::load();
+    updateFileDataInfo(*fileData);
 }
 
 void MainWindow::save()
 {   
-    m_entry.endCurrent();
-    FileData fileData = File::update(m_entry);
-    m_entry = Entry();
+    m_entry->endCurrent();
+    FileData* fileData = File::update(m_entry);
+    m_entry = new Entry();
     QMessageBox* saveInfo = new QMessageBox(this);
     saveInfo->setText("Saved!");
     saveInfo->show();
-    updateFileDataInfo(fileData);
+    updateFileDataInfo(*fileData);
 }
 
 void MainWindow::saveOver()
 {
-    m_entry.endCurrent();
-    FileData fileData = File::saveOver(m_entry);
-    m_entry = Entry();
+    m_entry->endCurrent();
+    FileData* fileData = File::saveOver(m_entry);
+    m_entry = new Entry();
     QMessageBox* saveInfo = new QMessageBox(this);
     saveInfo->setText("Saved Over!");
     saveInfo->show();
-    updateFileDataInfo(fileData);
+    updateFileDataInfo(*fileData);
 }
 
 void MainWindow::updateFileDataInfo(FileData fileData)
@@ -137,9 +142,9 @@ void MainWindow::updateFileDataInfo(FileData fileData)
     for(auto entry : fileData.m_entries) {
         QTreeWidgetItem *item = new QTreeWidgetItem(0);
 
-        item->setText(0, QString(entry.m_startTime.toString() + " -> " + entry.m_endTime.toString()));
+        item->setText(0, QString(entry->m_startTime.toString() + " -> " + entry->m_endTime.toString()));
 
-        for(auto processInfo : entry.m_processBuffer)
+        for(auto processInfo : entry->m_processBuffer)
         {
             QTreeWidgetItem *subitem = new QTreeWidgetItem(0);
             subitem->setText(0, processInfo.getRecordedTime().toString());

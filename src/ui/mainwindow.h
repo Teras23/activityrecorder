@@ -41,7 +41,7 @@ private:
     void updateFileDataInfo(FileData);
 	void closeEvent(QCloseEvent *event);
 
-	Entry m_entry;
+    Entry* m_entry;
 };
 
 #endif // MAINWINDOW_H

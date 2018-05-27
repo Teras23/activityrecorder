@@ -9,6 +9,7 @@ class Entry
 {
 public:
     Entry();
+    Entry(Entry&);
 
     QDateTime m_startTime;
     QDateTime m_endTime;

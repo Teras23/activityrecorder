@@ -8,9 +8,9 @@
 #include <iostream>
 #include <map>
 
-FileData File::fileData = FileData();
+FileData* File::fileData = nullptr;
 
-void File::write(FileData fileData)
+void File::write(FileData* fileData)
 {
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
@@ -24,7 +24,7 @@ void File::write(FileData fileData)
 	if (data.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QDataStream dataStream(&data);
 
-        dataStream << fileData;
+        dataStream << *fileData;
 
 		data.close();
 	}
@@ -34,9 +34,10 @@ void File::write(FileData fileData)
 	}
 }
 
-FileData File::read()
+FileData* File::read()
 {
-	auto fileData = FileData();
+    cleanFileData();
+    auto fileData = new FileData();
 
 	QString dataLocation = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 	QFile data(dataLocation + getFileName());
@@ -48,44 +49,51 @@ FileData File::read()
 	if (data.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QDataStream dataStream(&data);
 
-        dataStream >> fileData;
+        dataStream >> *fileData;
 	}
 
 	return fileData;
 }
 
-FileData File::load()
+FileData* File::load()
 {
     fileData = read();
 
     return fileData;
 }
 
-FileData File::update(Entry entry)
+FileData* File::update(Entry* entry)
 {
-    if(fileData.isEmpty()) {
+    if(fileData == nullptr || fileData->isEmpty()) {
         fileData = read();
 
-        if(!fileData.isValid()) {
+        if(!fileData->isValid()) {
             qDebug() << "DATA FORMAT IS NOT VALID!";
             //TODO: make backup of old file and start again
             return fileData;
         }
     }
 
-    fileData.update(fileData, entry);
+    fileData->update(entry);
 
     write(fileData);
     return fileData;
 }
 
-FileData File::saveOver(Entry entry) {
-    auto fileData = FileData();
+FileData* File::saveOver(Entry* entry) {
+    cleanFileData();
+    auto fileData = new FileData();
 
-    fileData.update(fileData, entry);
+    fileData->update(entry);
 
     write(fileData);
     return fileData;
+}
+
+void File::cleanFileData() {
+    if(fileData != nullptr) {
+        delete fileData;
+    }
 }
 
 QString File::getFileName()

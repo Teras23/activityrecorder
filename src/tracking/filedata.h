@@ -11,6 +11,7 @@
 class FileData {
 public:
 	FileData();
+    ~FileData();
 
     QString m_magic;
     QString m_version;
@@ -24,10 +25,10 @@ public:
     std::map<int, std::wstring> m_processesReverse;
 	std::map<int, std::map<std::wstring, int>> m_processTitles;
 
-    std::vector<Entry> m_entries;
+    std::vector<Entry*> m_entries;
 
-    FileData update(FileData, Entry);
-    Entry updateProcessTitleIds(Entry);
+    void update(Entry*);
+    void updateProcessTitleIds(Entry*);
     void createReverse();
     bool isValid();
     bool isEmpty();
