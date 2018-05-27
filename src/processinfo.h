@@ -3,7 +3,7 @@
 
 #include "process.h"
 
-#include <QTime>
+#include <QDateTime>
 #include <vector>
 
 class ProcessInfo
@@ -11,15 +11,15 @@ class ProcessInfo
 public:
     ProcessInfo();
 	ProcessInfo(Process);
-    ProcessInfo(QTime, int);
+    ProcessInfo(QDateTime, int);
 
 	Process getProcess();
-	QTime getRecordedTime();
+    QDateTime getRecordedTime();
     int getProcessTitleId();
     void setProcessTitleId(int);
 
 private:
-    QTime m_recordedTime;
+    QDateTime m_recordedTime;
 	Process m_process;
     int m_processTitleId;
 };

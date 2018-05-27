@@ -32,7 +32,8 @@ SOURCES +=  \
     src/entry.cpp \
     src/infowindow.cpp \
     src/filedata.cpp \
-    src/processinfo.cpp
+    src/processinfo.cpp \
+    src/statistics.cpp
 
 
 HEADERS += \
@@ -43,7 +44,8 @@ HEADERS += \
     src/entry.h \
     src/infowindow.h \
     src/processinfo.h \
-    src/filedatainfowindow.h
+    src/filedatainfowindow.h \
+    src/statistics.h
 
 
 FORMS += \

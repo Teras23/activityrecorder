@@ -3,15 +3,15 @@
 #include "processinfo.h"
 
 #include <vector>
-#include <QTime>
+#include <QDateTime>
 
 class Entry
 {
 public:
     Entry();
 
-    QTime m_startTime;
-    QTime m_endTime;
+    QDateTime m_startTime;
+    QDateTime m_endTime;
 	std::vector<ProcessInfo> m_processBuffer;
 
     void update(ProcessInfo);

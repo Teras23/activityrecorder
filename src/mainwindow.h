@@ -24,6 +24,7 @@ private slots:
 	void quit();
     void load();
     void save();
+    void saveOver();
 
 private:
 	QIcon getIcon();

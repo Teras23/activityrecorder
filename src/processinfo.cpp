@@ -5,26 +5,26 @@
 
 ProcessInfo::ProcessInfo()
 {
-    m_recordedTime = QTime();
+    m_recordedTime = QDateTime();
     m_process = Process();
     m_processTitleId = -1;
 }
 
 ProcessInfo::ProcessInfo(Process process)
 {
-    m_recordedTime = QTime::currentTime();
+    m_recordedTime = QDateTime::currentDateTime();
 	m_process = process;
     m_processTitleId = -1;
 }
 
-ProcessInfo::ProcessInfo(QTime recordedTime, int processTitleId) :
+ProcessInfo::ProcessInfo(QDateTime recordedTime, int processTitleId) :
     m_recordedTime(recordedTime)
 {
     m_process = Process();
     m_processTitleId = processTitleId;
 }
 
-QTime ProcessInfo::getRecordedTime()
+QDateTime ProcessInfo::getRecordedTime()
 {
     return m_recordedTime;
 }
@@ -55,7 +55,7 @@ QDataStream& operator<<(QDataStream& out, ProcessInfo &processInfo)
 
 QDataStream& operator>>(QDataStream& in, ProcessInfo &processInfo)
 {
-    QTime recordedTime;
+    QDateTime recordedTime;
     in >> recordedTime;
     qint32 processTitleId;
     in >> processTitleId;

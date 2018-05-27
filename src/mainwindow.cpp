@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	QAction *saveAction = ui->actionSave;
 	connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
 
+    QAction *saveOverAction = ui->actionSave_Over;
+    connect(saveOverAction, SIGNAL(triggered()), this, SLOT(saveOver()));
+
 	InfoWindow *infoWindow = new InfoWindow(this);
 
 	QAction *infoAction = ui->actionInfo;
@@ -96,6 +99,17 @@ void MainWindow::save()
     updateFileDataInfo(fileData);
 }
 
+void MainWindow::saveOver()
+{
+    m_entry.endCurrent();
+    FileData fileData = File::saveOver(m_entry);
+    m_entry = Entry();
+    QMessageBox* saveInfo = new QMessageBox(this);
+    saveInfo->setText("Saved Over!");
+    saveInfo->show();
+    updateFileDataInfo(fileData);
+}
+
 void MainWindow::updateFileDataInfo(FileData fileData)
 {
     QTreeWidget *tree = ui->windowsTreeWidget;
@@ -122,6 +136,7 @@ void MainWindow::updateFileDataInfo(FileData fileData)
 
     for(auto entry : fileData.m_entries) {
         QTreeWidgetItem *item = new QTreeWidgetItem(0);
+
         item->setText(0, QString(entry.m_startTime.toString() + " -> " + entry.m_endTime.toString()));
 
         for(auto processInfo : entry.m_processBuffer)
@@ -134,6 +149,8 @@ void MainWindow::updateFileDataInfo(FileData fileData)
         entryTree->addTopLevelItem(item);
     }
     entryTree->resizeColumnToContents(0);
+
+    QTreeWidget *statisticsTree = ui->statisticsTreeWidget;
 }
 
 void MainWindow::createTray()

@@ -36,7 +36,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="infoTab">
        <attribute name="title">
@@ -165,7 +165,32 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="statsTab">
+       <attribute name="title">
+        <string>Page</string>
+       </attribute>
+       <widget class="QTreeWidget" name="statisticsTreeWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>11</y>
+          <width>471</width>
+          <height>191</height>
+         </rect>
+        </property>
+        <column>
+         <property name="text">
+          <string>Process</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Time</string>
+         </property>
+        </column>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="windowsTab">
        <attribute name="title">
         <string>Windows</string>
        </attribute>
@@ -186,7 +211,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="pagesTab">
        <attribute name="title">
         <string>Entries</string>
        </attribute>
@@ -229,6 +254,7 @@
     </property>
     <addaction name="actionLoad"/>
     <addaction name="actionSave"/>
+    <addaction name="actionSave_Over"/>
     <addaction name="actionInfo"/>
    </widget>
    <addaction name="menuFile"/>
@@ -252,6 +278,11 @@
   <action name="actionLoad">
    <property name="text">
     <string>Load</string>
+   </property>
+  </action>
+  <action name="actionSave_Over">
+   <property name="text">
+    <string>Save Over</string>
    </property>
   </action>
  </widget>

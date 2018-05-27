@@ -65,6 +65,8 @@ FileData FileData::update(FileData fileData, Entry entry)
 
     m_empty = false;
 
+    createReverse();
+
     return fileData;
 }
 

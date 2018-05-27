@@ -79,6 +79,15 @@ FileData File::update(Entry entry)
     return fileData;
 }
 
+FileData File::saveOver(Entry entry) {
+    auto fileData = FileData();
+
+    fileData.update(fileData, entry);
+
+    write(fileData);
+    return fileData;
+}
+
 QString File::getFileName()
 {
 #ifdef QT_DEBUG

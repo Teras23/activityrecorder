@@ -4,8 +4,8 @@
 
 Entry::Entry()
 {
-    m_startTime = QTime::currentTime();
-    m_endTime = QTime();
+    m_startTime = QDateTime::currentDateTime();
+    m_endTime = QDateTime();
 	m_processBuffer = std::vector<ProcessInfo>();
 }
 
@@ -14,7 +14,7 @@ void Entry::update(ProcessInfo processInfo) {
 }
 
 void Entry::endCurrent() {
-	m_endTime = QTime::currentTime();
+    m_endTime = QDateTime::currentDateTime();
 }
 
 QDataStream& operator<<(QDataStream& out, const Entry &entry)
