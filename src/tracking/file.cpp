@@ -105,6 +105,16 @@ QString File::getFileName()
 #endif
 }
 
+Statistics File::generateStatistics() {
+    auto statistics = Statistics();
+
+    for(auto entry : fileData->m_entries) {
+        statistics.update(entry);
+    }
+
+    return statistics;
+}
+
 QString File::getFilePath()
 {
 	return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + getFileName();

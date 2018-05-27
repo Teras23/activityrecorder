@@ -1,6 +1,7 @@
 #include "entry.h"
 
 #include <QDataStream>
+#include <QDebug>
 
 Entry::Entry()
 {
@@ -28,6 +29,8 @@ QDataStream& operator<<(QDataStream& out, const Entry &entry)
 {
     out << entry.m_startTime;
     out << entry.m_endTime;
+
+    qDebug() << entry.m_startTime << " " << entry.m_endTime;
 
     out << static_cast<qint32>(entry.m_processBuffer.size());
 

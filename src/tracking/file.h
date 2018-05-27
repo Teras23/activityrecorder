@@ -4,6 +4,7 @@
 #include "process.h"
 #include "filedata.h"
 #include "entry.h"
+#include "../ui/statistics.h"
 
 #include <QString>
 #include <vector>
@@ -17,6 +18,8 @@ public:
     static FileData* saveOver(Entry*);
 	static QString getFileName();
 	static QString getFilePath();
+
+    static Statistics generateStatistics();
 
     static void cleanFileData();
 

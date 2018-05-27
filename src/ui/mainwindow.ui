@@ -36,7 +36,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="infoTab">
        <attribute name="title">
@@ -167,7 +167,7 @@
       </widget>
       <widget class="QWidget" name="statsTab">
        <attribute name="title">
-        <string>Page</string>
+        <string>Statistics</string>
        </attribute>
        <widget class="QTreeWidget" name="statisticsTreeWidget">
         <property name="geometry">

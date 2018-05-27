@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_entry = new Entry();
 
-    m_pollTime = 10000; //10 seconds
+    m_pollTime = 3000; //10 seconds
     m_saveTime = 60000; //1 minute
 
 	m_pollTimer->start(m_pollTime);
@@ -156,6 +156,8 @@ void MainWindow::updateFileDataInfo(FileData fileData)
     entryTree->resizeColumnToContents(0);
 
     QTreeWidget *statisticsTree = ui->statisticsTreeWidget;
+
+    File::generateStatistics();
 }
 
 void MainWindow::createTray()

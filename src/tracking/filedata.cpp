@@ -1,6 +1,7 @@
 #include "filedata.h"
 #include "process.h"
 #include <iostream>
+#include <QDebug>
 
 #define MAGIC "ARDF"
 #define VERSION "0.1"
@@ -113,6 +114,10 @@ bool FileData::isEmpty()
     return m_empty;
 }
 
+//std::wstring FileData::getProcessTitle() {
+
+//}
+
 QDataStream& operator<<(QDataStream& out, const FileData &fd)
 {
     out << fd.m_magic;
@@ -127,6 +132,8 @@ QDataStream& operator<<(QDataStream& out, const FileData &fd)
         out << QString::fromStdWString(process.first);			//process name
     }
 
+    out << static_cast<qint32>(0xFFFFFFFF);
+
     //window title tree
     out << static_cast<qint32>(fd.m_processTitleIndex);
     out << static_cast<qint32>(fd.m_processTitles.size()); //number of different processes
@@ -140,6 +147,8 @@ QDataStream& operator<<(QDataStream& out, const FileData &fd)
             out << QString::fromStdWString(processTitle.first);	//name of the process title
         }
     }
+
+    out << static_cast<qint32>(0xFFFFFFFF);
 
     //entries
     out << static_cast<qint32>(fd.m_entries.size());
@@ -168,6 +177,14 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
         fd.m_processes.insert(std::make_pair(processName.toStdWString(), processId));
     }
 
+    qint32 windowFiller;
+
+    in >> windowFiller;
+
+    if(windowFiller != 0xFFFFFFFF) {
+        qDebug() << "Did not find window filler";
+    }
+
     //window title tree
     qint32 processTitlesSize;
     in >> fd.m_processTitleIndex;
@@ -189,6 +206,14 @@ QDataStream& operator>>(QDataStream& in, FileData &fd)
         }
 
         fd.m_processTitles.insert(std::make_pair(processId, windows));
+    }
+
+    qint32 entriesFiller;
+
+    in >> entriesFiller;
+
+    if(entriesFiller != 0xFFFFFFFF) {
+        qDebug() << "Did not find entries filler";
     }
 
     //entries
