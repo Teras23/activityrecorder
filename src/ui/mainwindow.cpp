@@ -62,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    File::cleanFileData();
+    //File::cleanFileData();
 
     if(m_entry != nullptr) {
         delete m_entry;
@@ -159,34 +159,34 @@ void MainWindow::updateFileDataInfo(FileData fileData)
     }
     entryTree->resizeColumnToContents(0);
 
-    QTreeWidget *statisticsTree = ui->statisticsTreeWidget;
+//    QTreeWidget *statisticsTree = ui->statisticsTreeWidget;
 
-    for(int i = 0; i < fileData.m_entries.size(); i++) {
-        auto entry = fileData.m_entries[i];
-        m_statistics.update(entry);
-    }
+//    for(int i = 0; i < fileData.m_entries.size(); i++) {
+//        auto entry = fileData.m_entries[i];
+//        m_statistics.update(entry);
+//    }
 
-    statisticsTree->clear();
+//    statisticsTree->clear();
 
-    for(auto it = m_statistics.m_titleIdDurationMap.begin(); it != m_statistics.m_titleIdDurationMap.end(); ++it) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(0);
+//    for(auto it = m_statistics.m_titleIdDurationMap.begin(); it != m_statistics.m_titleIdDurationMap.end(); ++it) {
+//        QTreeWidgetItem *item = new QTreeWidgetItem(0);
 
-        QString title;
+//        QString title;
 
-        if(m_statistics.m_idTitleMap.find(it->first) == m_statistics.m_idTitleMap.end()) {
-            title = QString::fromStdWString(fileData.m_processTitlesDirect[it->first]);
-            m_statistics.m_idTitleMap[it->first] = fileData.m_processTitlesDirect[it->first];
-        }
-        else {
-            title = QString::fromStdWString(m_statistics.m_idTitleMap[it->first]);
-        }
+//        if(m_statistics.m_idTitleMap.find(it->first) == m_statistics.m_idTitleMap.end()) {
+//            title = QString::fromStdWString(fileData.m_processTitlesDirect[it->first]);
+//            m_statistics.m_idTitleMap[it->first] = fileData.m_processTitlesDirect[it->first];
+//        }
+//        else {
+//            title = QString::fromStdWString(m_statistics.m_idTitleMap[it->first]);
+//        }
 
-        item->setText(0, title);
-        item->setText(1, QString::number(it->second/1000) + "s");
+//        item->setText(0, title);
+//        item->setText(1, QString::number(it->second/1000) + "s");
 
-        qDebug() << it->first << " " << it->second << " " << title;
-        statisticsTree->addTopLevelItem(item);
-    }
+//        qDebug() << it->first << " " << it->second << " " << title;
+//        statisticsTree->addTopLevelItem(item);
+//    }
 }
 
 void MainWindow::createTray()
