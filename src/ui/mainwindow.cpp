@@ -49,11 +49,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_entry = new Entry();
 
-	m_pollTime = 1000;
-	m_saveTime = 10000;
+    m_pollTime = 10000; //10 seconds
+    m_saveTime = 60000; //1 minute
 
 	m_pollTimer->start(m_pollTime);
-	//m_saveTimer->start(10000);
+    m_saveTimer->start(m_saveTime);
 }
 
 MainWindow::~MainWindow()
@@ -99,8 +99,8 @@ void MainWindow::save()
     FileData* fileData = File::update(m_entry);
     m_entry = new Entry();
     QMessageBox* saveInfo = new QMessageBox(this);
-    saveInfo->setText("Saved!");
-    saveInfo->show();
+    //saveInfo->setText("Saved!");
+    //saveInfo->show();
     updateFileDataInfo(*fileData);
 }
 
