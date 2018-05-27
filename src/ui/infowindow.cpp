@@ -1,6 +1,6 @@
 #include "infowindow.h"
 #include "ui_infowindow.h"
-#include "file.h"
+#include "../tracking/file.h"
 
 InfoWindow::InfoWindow(QWidget *parent) :
 	QDialog(parent),

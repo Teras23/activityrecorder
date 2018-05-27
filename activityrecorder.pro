@@ -26,31 +26,31 @@ msvc: LIBS += -luser32 -lkernel32 -lpsapi
 
 SOURCES +=  \
     src/main.cpp \
-    src/mainwindow.cpp \
-    src/process.cpp \
-    src/file.cpp \
-    src/entry.cpp \
-    src/infowindow.cpp \
-    src/filedata.cpp \
-    src/processinfo.cpp \
-    src/statistics.cpp
+    src/tracking/process.cpp \
+    src/tracking/file.cpp \
+    src/tracking/entry.cpp \
+    src/ui/infowindow.cpp \
+    src/tracking/filedata.cpp \
+    src/tracking/processinfo.cpp \
+    src/ui/statistics.cpp \
+    src/ui/mainwindow.cpp
 
 
 HEADERS += \
-    src/mainwindow.h \
-    src/process.h \
-    src/file.h \
-    src/filedata.h \
-    src/entry.h \
-    src/infowindow.h \
-    src/processinfo.h \
-    src/filedatainfowindow.h \
-    src/statistics.h
+    src/tracking/process.h \
+    src/tracking/file.h \
+    src/tracking/filedata.h \
+    src/tracking/entry.h \
+    src/ui/infowindow.h \
+    src/tracking/processinfo.h \
+    src/ui/filedatainfowindow.h \
+    src/ui/statistics.h \
+    src/ui/mainwindow.h
 
 
 FORMS += \
-    src/mainwindow.ui \
-    src/infowindow.ui
+    src/ui/infowindow.ui \
+    src/ui/mainwindow.ui
 
 RESOURCES += \
     resources.qrc

@@ -1,7 +1,7 @@
 #ifndef FILEDATAINFOWINDOW_H
 #define FILEDATAINFOWINDOW_H
 
-#include "filedata.h"
+#include "../tracking/filedata.h"
 
 #include <QDialog>
 

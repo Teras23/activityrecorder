@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "process.h"
-#include "file.h"
-#include "entry.h"
-#include "infowindow.h"
-#include "processinfo.h"
-#include "filedata.h"
+#include "../tracking/file.h"
+#include "../tracking/entry.h"
+#include "../ui/infowindow.h"
+#include "../tracking/processinfo.h"
+#include "../tracking/filedata.h"
 
 #include <QTimer>
 #include <QMessageBox>

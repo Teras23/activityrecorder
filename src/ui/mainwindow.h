@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "entry.h"
-#include "filedata.h"
+#include "../tracking/entry.h"
+#include "../tracking/filedata.h"
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
