@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "process.h"
+#include "../tracking/process.h"
 #include "../tracking/file.h"
 #include "../tracking/entry.h"
 #include "../ui/infowindow.h"
@@ -102,7 +102,7 @@ void MainWindow::save()
     m_entry->endCurrent();
     FileData* fileData = File::update(m_entry);
     m_entry = new Entry();
-    QMessageBox* saveInfo = new QMessageBox(this);
+    //QMessageBox* saveInfo = new QMessageBox(this);
     //saveInfo->setText("Saved!");
     //saveInfo->show();
     updateFileDataInfo(*fileData);
