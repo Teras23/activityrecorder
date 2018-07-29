@@ -1,13 +1,16 @@
-#include "ui/mainwindow.h"
+#include <iostream>
+
 #include <QApplication>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 
-int main(int argc, char* argv[])
-{
-	QApplication::setApplicationName("activityrecorder");
+#include "ui/mainwindow.h"
 
-	QApplication a(argc, argv);
-	MainWindow w;
-	w.show();
+int main(int argc, char **argv) {
+    QApplication::setApplicationName("activityrecorder");
 
-	return a.exec();
+    QApplication app(argc, argv);
+    MainWindow w;
+    w.show();
+    return app.exec();
 }
