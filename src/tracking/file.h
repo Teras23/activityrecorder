@@ -11,11 +11,8 @@
 
 class File {
 public:
-    static FileData* load();
     static FileData* read();
     static void write(FileData*);
-    static FileData* update(Entry*);
-    static FileData* saveOver(Entry*);
 	static QString getFileName();
 	static QString getFilePath();
 

@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include "../tracking/entry.h"
 #include "../tracking/filedata.h"
 #include "statistics.h"
 
@@ -44,7 +43,7 @@ private:
     void updateFileDataInfo(FileData);
 	void closeEvent(QCloseEvent *event);
 
-    Entry* m_entry;
+    FileData* m_fileData;
 };
 
 #endif // MAINWINDOW_H

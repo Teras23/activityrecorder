@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <iostream>
 #include <map>
+#include <QtCore/QJsonObject>
+#include <QtCore/QJsonDocument>
 
 FileData* File::fileData = nullptr;
 
@@ -23,8 +25,8 @@ void File::write(FileData* fileData)
 
 	if (data.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		QDataStream dataStream(&data);
-
-        dataStream << *fileData;
+		QJsonDocument jsonDocument = fileData->write();
+        dataStream << jsonDocument.toBinaryData();
 
 		data.close();
 	}
@@ -49,45 +51,10 @@ FileData* File::read()
 	if (data.open(QIODevice::ReadOnly | QIODevice::Text)) {
 		QDataStream dataStream(&data);
 
-        dataStream >> *fileData;
+		QJsonDocument jsonDocument = QJsonDocument();
 	}
 
 	return fileData;
-}
-
-FileData* File::load()
-{
-    fileData = read();
-
-    return fileData;
-}
-
-FileData* File::update(Entry* entry)
-{
-    if(fileData == nullptr || fileData->isEmpty()) {
-        fileData = read();
-
-        if(!fileData->isValid()) {
-            qDebug() << "DATA FORMAT IS NOT VALID!";
-            //TODO: make backup of old file and start again
-            return fileData;
-        }
-    }
-
-    fileData->update(entry);
-
-    write(fileData);
-    return fileData;
-}
-
-FileData* File::saveOver(Entry* entry) {
-    cleanFileData();
-    auto fileData = new FileData();
-
-    fileData->update(entry);
-
-    write(fileData);
-    return fileData;
 }
 
 void File::cleanFileData() {

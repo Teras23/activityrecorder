@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_statistics = Statistics();
 
-    m_entry = new Entry();
+    m_fileData = new FileData();
 
     m_pollTime = 2000; //10 seconds
     m_saveTime = 5000; //1 minute
@@ -64,8 +64,8 @@ MainWindow::~MainWindow()
 {
     //File::cleanFileData();
 
-    if(m_entry != nullptr) {
-        delete m_entry;
+    if(m_fileData != nullptr) {
+        delete m_fileData;
     }
 	delete ui;
 }
@@ -84,7 +84,7 @@ void MainWindow::update()
 {
 	Process process = Process::getActiveProcess();
 
-    m_entry->update(ProcessInfo(process));
+    m_fileData->update(new ProcessInfo(process));
 
     ui->currentActivityName->setText(QString::fromStdWString(process.getProcessName()));
     ui->currentActivityTitle->setText(QString::fromStdWString(process.getProcessTitle()));
@@ -93,30 +93,26 @@ void MainWindow::update()
 
 void MainWindow::load()
 {
-    FileData* fileData = File::load();
-    updateFileDataInfo(*fileData);
+    FileData* m_fileData = File::read();
+    updateFileDataInfo(*m_fileData);
 }
 
 void MainWindow::save()
-{   
-    m_entry->endCurrent();
-    FileData* fileData = File::update(m_entry);
-    m_entry = new Entry();
+{
+    File::write(m_fileData);
     //QMessageBox* saveInfo = new QMessageBox(this);
     //saveInfo->setText("Saved!");
     //saveInfo->show();
-    updateFileDataInfo(*fileData);
+    updateFileDataInfo(*m_fileData);
 }
 
 void MainWindow::saveOver()
 {
-    m_entry->endCurrent();
-    FileData* fileData = File::saveOver(m_entry);
-    m_entry = new Entry();
-    QMessageBox* saveInfo = new QMessageBox(this);
+    File::write(m_fileData);
+    auto saveInfo = new QMessageBox(this);
     saveInfo->setText("Saved Over!");
     saveInfo->show();
-    updateFileDataInfo(*fileData);
+    updateFileDataInfo(*m_fileData);
 }
 
 void MainWindow::updateFileDataInfo(FileData fileData)
@@ -126,13 +122,13 @@ void MainWindow::updateFileDataInfo(FileData fileData)
     tree->clear();
 
     for(auto process : fileData.m_processTitles) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(0);
+        auto item = new QTreeWidgetItem(0);
         item->setText(0, QString::number(process.first));
         item->setText(1, QString::fromStdWString(fileData.m_processesReverse.at(process.first)));
 
         for(auto title : process.second)
         {
-            QTreeWidgetItem *subitem = new QTreeWidgetItem(0);
+            auto subitem = new QTreeWidgetItem(0);
             subitem->setText(0, QString::number(title.second));
             subitem->setText(1, QString::fromStdWString(title.first));
             item->addChild(subitem);
@@ -142,51 +138,6 @@ void MainWindow::updateFileDataInfo(FileData fileData)
 
     QTreeWidget *entryTree = ui->entriesTreeWidget;
     entryTree->clear();
-
-    for(auto entry : fileData.m_entries) {
-        QTreeWidgetItem *item = new QTreeWidgetItem(0);
-
-        item->setText(0, QString(entry->m_startTime.toString() + " -> " + entry->m_endTime.toString()));
-
-        for(auto processInfo : entry->m_processBuffer)
-        {
-            QTreeWidgetItem *subitem = new QTreeWidgetItem(0);
-            subitem->setText(0, processInfo.getRecordedTime().toString());
-            subitem->setText(1, QString::number(processInfo.getProcessTitleId()));
-            item->addChild(subitem);
-        }
-        entryTree->addTopLevelItem(item);
-    }
-    entryTree->resizeColumnToContents(0);
-
-//    QTreeWidget *statisticsTree = ui->statisticsTreeWidget;
-
-//    for(int i = 0; i < fileData.m_entries.size(); i++) {
-//        auto entry = fileData.m_entries[i];
-//        m_statistics.update(entry);
-//    }
-
-//    statisticsTree->clear();
-
-//    for(auto it = m_statistics.m_titleIdDurationMap.begin(); it != m_statistics.m_titleIdDurationMap.end(); ++it) {
-//        QTreeWidgetItem *item = new QTreeWidgetItem(0);
-
-//        QString title;
-
-//        if(m_statistics.m_idTitleMap.find(it->first) == m_statistics.m_idTitleMap.end()) {
-//            title = QString::fromStdWString(fileData.m_processTitlesDirect[it->first]);
-//            m_statistics.m_idTitleMap[it->first] = fileData.m_processTitlesDirect[it->first];
-//        }
-//        else {
-//            title = QString::fromStdWString(m_statistics.m_idTitleMap[it->first]);
-//        }
-
-//        item->setText(0, title);
-//        item->setText(1, QString::number(it->second/1000) + "s");
-
-//        qDebug() << it->first << " " << it->second << " " << title;
-//        statisticsTree->addTopLevelItem(item);
-//    }
 }
 
 void MainWindow::createTray()
