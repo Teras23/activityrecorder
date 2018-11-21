@@ -95,7 +95,7 @@ Process Process::getActiveProcess()
 	if (window != NULL) {
 		const int MAX_TITLE_SIZE = 256;
 		wchar_t processTitle[MAX_TITLE_SIZE];
-		int response = GetWindowText(window, processTitle, MAX_TITLE_SIZE + 1);
+		int response = GetWindowTextW(window, processTitle, MAX_TITLE_SIZE + 1);
 
 		if (response == 0) {
 			title = L"null";
@@ -114,15 +114,15 @@ Process Process::getActiveProcess()
 		wchar_t processPath[MAX_PATH];
 
 		if (process != NULL) {
-			HMODULE hMod;
+			HMODULE hMod[1024];
 			DWORD cb;
-			if (EnumProcessModules(process, &hMod, sizeof(hMod), &cb)) {
-				DWORD len = GetModuleFileNameEx(process, hMod, processPath, MAX_PATH);
+			if (EnumProcessModulesEx(process, &hMod[0], sizeof(hMod), &cb, LIST_MODULES_ALL)) {
+				DWORD len = GetModuleFileNameExW(process, hMod[0], processPath, MAX_PATH);
 				path = std::wstring(processPath);
 			}
 			else {
 				DWORD error = GetLastError();
-				std::cerr << error << std::endl;
+				std::cerr << "Error finding proccess path" << error << std::endl;
 				path = L"null";
 			}
 		}

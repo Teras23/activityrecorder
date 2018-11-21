@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/QtTest.iml" filepath="$PROJECT_DIR$/.idea/QtTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/activityrecorder.iml" filepath="$PROJECT_DIR$/.idea/activityrecorder.iml" />
     </modules>
   </component>
 </project>
