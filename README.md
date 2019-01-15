@@ -1,2 +1,2 @@
-# Trackle
-Tool to record your program usage on WIndows or Linux
+# Timewire
+Tool to record your program usage on Windows or Linux.
